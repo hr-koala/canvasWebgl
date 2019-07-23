@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="600" height="600"></canvas>
+    <script>
+        // 绘制图片
+        var myCanvas = document.getElementById('myCanvas')
+        var context = myCanvas.getContext('2d')
+        var img = new Image()
+        // img.src = 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2016853021,1110329093&fm=27&gp=0.jpg'
+        // img.onload = ()=>{
+        //     context.drawImage(img,10,10)
+        //     // context.drawImage(img,10,10,50,100)
+        //     //context.drawImage(img,10,10,200,200,50,100,300,300)
+                //context.drawImage( img , sx , sy , swidth , sheight , x , y , width , height);
+                // img：图片对象; sx：我们要在图片上扣的起始位置的X坐标; sy：我们要在图片上扣的起始位置的Y坐标; swidth，sheight：我们要扣的图片的宽高; x，y：扣完以后，我们要开始放在画布上的x,y的位置;width,height：我们要创建多大的画布区域存放我们扣过来的图片;
+        // }
+        // img.src = 'images/img1.png'
+        img.src = 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1247560941,3627973828&fm=27&gp=0.jpg'
+        img.onload = function(){
+            var imgW = this.width/4;//因为图片有11帧
+            var imgH = this.height/2;
+            var i = 1
+            var interval = setInterval(()=>{
+                i%=8
+                if(i>4){
+                    context.drawImage(this,imgW*(i-4),imgH,imgW,imgH,10,10,imgW,imgH)
+                }
+                context.drawImage(this,imgW*i,0,imgW,imgH,10,10,imgW,imgH)
+                i++
+            },100)
+        }
+        
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script>
+            // 保存画布(canvas)的所有状态: context.save();
+            // 恢复画布(canvas)的所有状态: context.restore();
+            var myCanvas = document.getElementById('myCanvas')
+            var context = myCanvas.getContext('2d')
+            context.beginPath()
+            context.save()
+            context.translate(100,100)
+            context.rect(0,0,100,100)
+            context.restore()
+            context.fillRect(50,50,100,100)
+            context.strokeRect(150,150,100,100)
+            context.stroke()
+        </script>
+
+        
+</body>
+</html>

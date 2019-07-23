@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    <script>
+        // 线性画圆(lineTo)
+        let myCanvas = document.getElementById('myCanvas');
+        let cxt = myCanvas.getContext('2d')
+        cxt.translate(myCanvas.width/2,myCanvas.height/2)
+        cxt.beginPath()
+        cxt.lineWidth = 5;
+        var angle = 0
+        var r = 100
+        cxt.moveTo(r,0)
+        let interval = setInterval(()=>{
+            angle %=360
+            var y = Math.sin(Math.PI/180 * angle) * r
+            var x = Math.cos(Math.PI/180 * angle) * r
+            var grd = cxt.createLinearGradient(0,0,x,y);
+            grd.addColorStop('0',"red");
+            grd.addColorStop('0.5',"yellow");
+            grd.addColorStop('1',"blue");
+            cxt.strokeStyle = grd
+            cxt.lineTo(x,y)
+            cxt.stroke()
+            angle++
+            if(angle === 0){
+                clearInterval(interval)
+            }
+        },50)
+        // cxt.beginPath()
+        // cxt.strokeStyle = '#f00'
+        // cxt.arc(50,50,50,Math.PI,false)
+        // cxt.closePath()
+        // cxt.stroke()
+    
+    </script>
+</body>
+</html>

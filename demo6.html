@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script>
+            // 利用正余弦绘制水波浪
+            var myCanvas = document.getElementById('myCanvas')
+            var context = myCanvas.getContext('2d')
+            context.beginPath()
+            var speed = 0,speed1=0
+            var interval = setInterval(()=>{
+                context.clearRect(0,0,600,600)
+                context.save()
+                context.translate(0,50)
+                context.beginPath()
+                for(let i=0;i<myCanvas.width;i++){
+                    speed -=0.0005
+                    var x= i
+                    var y = 20*Math.sin(i * Math.PI/180+(i/200)+speed)
+                    context[i === 0? 'moveTo':'lineTo'](x,y)
+                }
+                context.lineTo(600,500)
+                context.lineTo(0,500)
+                context.fillStyle = 'rgba(0,10,217,1)'
+                context.closePath()
+                context.fill()
+                context.restore()
+
+                context.save()
+                context.translate(0,50)
+                context.beginPath()
+                for(let i=0;i<500;i++){
+                    speed1 -=0.0003
+                    var x= i
+                    var y = 20*Math.cos(i * Math.PI/180+(i/200)+speed1)
+                    context[i === 0? 'moveTo':'lineTo'](x,y)
+                }
+                context.lineTo(600,500)
+                context.lineTo(0,500)
+                context.fillStyle = 'rgba(0,10,217,.6)'
+                context.closePath()
+                context.fill()
+                context.restore()
+            },50)
+                        
+        </script>
+
+        
+</body>
+</html>

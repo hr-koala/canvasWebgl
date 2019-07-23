@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="500" height="500" ></canvas>
+    <script>
+        // 正余弦曲线
+    var myCanvas = document.getElementById('myCanvas')
+    var context = myCanvas.getContext('2d')
+    context.translate(0,myCanvas.height/2)
+    context.beginPath()
+    context.lineWidth = 5
+    context.strokeStyle = '#f00'
+    context.moveTo(0,0)
+    var angle = 0
+    var k = 80
+    var interval = setInterval(()=>{
+        var y = Math.sin(Math.PI/180 * angle) * k
+        var x = angle
+        context.lineTo(x,y)
+        angle++
+        context.stroke()
+    },50)
+
+    // context.beginPath()
+    // context.lineWidth = 5
+    // context.strokeStyle = '#0f0'
+    // context.moveTo(0,0)
+    // var angle1 = 0
+    // for(var angle1 = 0; angle1<360;angle1++){
+    //     var x = angle1
+    //     var y = Math.cos(Math.PI/180 * angle1) * 80
+    //     context.lineTo(x,y)
+    // }
+    // context.stroke()
+
+    </script>
+</body>
+</html>
