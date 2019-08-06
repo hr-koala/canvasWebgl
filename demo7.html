@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script>
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            context.beginPath()
+            var img = new Image()
+            img.onload = function () {
+                context.width = this.width
+                context.height = this.height
+                var {width,height} = canvas
+                //
+                var iNow = 0, a = 0
+                var interval = setInterval(()=>{
+                    context.clearRect(0,-height,width,height*2)
+                    context.save()
+                    context.drawImage(this,0,0)
+                    var transY = height
+                    if(a>height){
+                        a = height
+                        clearInterval(interval)
+                    }
+                    document.title = "当前进度为： "+ ((a/height*100)|0)+'%';
+                    context.translate(0,height - a)
+                    a+=.5
+                    context.globalCompositeOperation = "source-atop"
+                    context.beginPath()
+                    for (var i = 0;i<width;i++){
+                        iNow -= 0.002;
+                        var x = i;
+                        var y = 8*Math.sin(x*Math.PI/180+(i/200)+iNow)
+                        context[i === 0? 'moveTo':'lineTo'](x,y)
+                    }
+                    context.lineTo(width,height);
+                    context.lineTo(0,height);
+                    context.closePath();
+                    context.fillStyle = "#f90"
+                    context.fill()
+
+                    context.strokeStyle = "#f90"
+                    context.stroke()
+                    context.restore()
+                },50)
+            }
+            img.src = "images/img1.png"
+        </script>
+        <!--<script>
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            context.beginPath()
+            context.arc(100,100,100,0,Math.PI*2,false)
+            context.fillStyle = "#f90"
+            context.fill()
+            // 在canvas中，有很多种的合成方式，设置合成方式的API为：
+            // context.globalCompositeOperation = type
+            // 1.source-over,默认的合成方式。即，后绘制的在上面
+            // 2.destination-over，与source-over相反，后绘制的在下面
+            // 3.source-atop
+            context.globalCompositeOperation = "source-atop"
+            context.fillStyle = "#000"
+            context.fillRect(100,100,150,160)
+        </script>-->
+
+
+</body>
+</html>

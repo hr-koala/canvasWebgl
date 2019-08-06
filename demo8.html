@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <!--<script>
+            class Ball{
+                constructor(options){
+                    this.x = 0; //小球x坐标
+                    this.y = 0; //小球y坐标
+                    this.r = 20; //小球半径
+                    this.scaleX = 1;  //小球x轴的缩放
+                    this.scaleY = 1; //小球y轴的缩放
+                    this.strokeStyle = 'rgba(0,0,0,0)';  //小球的描边颜色
+                    this.fillStyle = '#abcdef'; //小球填充色
+                    this.opacity = 1; //小球透明度
+                    Object.assign(this,options); //将实例化的参数覆盖默认参数
+                    return this;  //返回当前对象，以实现链式调用
+
+                }
+                render(context){
+                    let {x, y, r, scaleX, scaleY, fillStyle, strokeStyle, opacity } = this;
+                    context.save()
+                    context.strokeStyle = strokeStyle
+                    context.fillStyle = fillStyle
+                    context.translate(x, y)
+                    context.globalAlpha = opacity
+                    context.scale(scaleX, scaleY)
+                    context.beginPath()
+                    context.arc(0,0,r,0,Math.PI*2,false)
+                    context.fill()
+                    context.stroke()
+                    context.restore();
+                    return this
+                }
+            }
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+            context.beginPath()
+            var ball = new Ball({
+                x:50,
+                y:100,
+                r:20
+            }).render(context);
+            var speed = 2;
+            function move() {
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                if(ball.x<width)ball.x += speed
+                if(ball.x>=width-ball.r)ball.x = 0
+
+                ball.render(context)
+            }
+            move()
+        </script>-->
+
+        <!--<script>
+            class Ball{
+                constructor(options){
+                    this.x = 0; //小球x坐标
+                    this.y = 0; //小球y坐标
+                    this.r = 20; //小球半径
+                    this.scaleX = 1;  //小球x轴的缩放
+                    this.scaleY = 1; //小球y轴的缩放
+                    this.strokeStyle = 'rgba(0,0,0,0)';  //小球的描边颜色
+                    this.fillStyle = '#abcdef'; //小球填充色
+                    this.opacity = 1; //小球透明度
+                    Object.assign(this,options); //将实例化的参数覆盖默认参数
+                    return this;  //返回当前对象，以实现链式调用
+
+                }
+                render(context){
+                    let {x, y, r, scaleX, scaleY, fillStyle, strokeStyle, opacity } = this;
+                    context.save()
+                    context.strokeStyle = strokeStyle
+                    context.fillStyle = fillStyle
+                    context.translate(x, y)
+                    context.globalAlpha = opacity
+                    context.scale(scaleX, scaleY)
+                    context.beginPath()
+                    context.arc(0,0,r,0,Math.PI*2,false)
+                    context.fill()
+                    context.stroke()
+                    context.restore();
+                    return this
+                }
+            }
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+            context.beginPath()
+            var ball = new Ball({
+                x:50,
+                y:100,
+                r:20,
+                fillStyle:'#f90'
+            }).render(context);
+            var amplitude = 100  //振幅
+            var vx=1, angle=0;
+            function move() {
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                if(ball.x<width)ball.x += vx
+                if(ball.x>=width-ball.r)ball.x = 0
+                ball.y = Math.sin(angle)*amplitude + 150
+                angle +=0.05
+                angle%=Math.PI*2;
+
+                ball.render(context)
+            }
+            move()
+        </script>
+-->
+
+        <script>
+            class Ball{
+                constructor(options){
+                    this.x = 0; //小球x坐标
+                    this.y = 0; //小球y坐标
+                    this.r = 20; //小球半径
+                    this.scaleX = 1;  //小球x轴的缩放
+                    this.scaleY = 1; //小球y轴的缩放
+                    this.strokeStyle = 'rgba(0,0,0,0)';  //小球的描边颜色
+                    this.fillStyle = '#abcdef'; //小球填充色
+                    this.opacity = 1; //小球透明度
+                    Object.assign(this,options); //将实例化的参数覆盖默认参数
+                    return this;  //返回当前对象，以实现链式调用
+
+                }
+                render(context){
+                    let {x, y, r, scaleX, scaleY, fillStyle, strokeStyle, opacity } = this;
+                    context.save()
+                    context.strokeStyle = strokeStyle
+                    context.fillStyle = fillStyle
+                    context.translate(x, y)
+                    context.globalAlpha = opacity
+                    context.scale(scaleX, scaleY)
+                    context.beginPath()
+                    context.arc(0,0,r,0,Math.PI*2,false)
+                    context.fill()
+                    context.stroke()
+                    context.restore();
+                    return this
+                }
+            }
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+            context.beginPath()
+            var ball = new Ball({
+                x:200,
+                y:200,
+                r:40,
+                fillStyle:'#f90'
+            }).render(context);
+            var amplitude = 100, amplitude2 = 0.5  //振幅
+            var vx=1, angle=0, initScale = 1
+            function move() {
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                ball.scaleX = ball.scaleY = initScale + Math.sin(angle) + amplitude2;
+                if(ball.x<width)ball.x += vx
+                if(ball.x>=width-ball.r)ball.x = 0
+                ball.y = Math.sin(angle)*amplitude + 150
+                angle +=0.08
+                angle%=Math.PI*2;
+
+                ball.render(context)
+            }
+            move()
+        </script>
+
+</body>
+</html>
