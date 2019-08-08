@@ -1,5 +1,4 @@
 
-
 // 封装一个小球
 
 class Ball{
@@ -14,6 +13,7 @@ class Ball{
         this.opacity = 1; //小球透明度
         Object.assign(this,options); //将实例化的参数覆盖默认参数
         return this;  //返回当前对象，以实现链式调用
+
     }
     render(context){
         let {x, y, r, scaleX, scaleY, fillStyle, strokeStyle, opacity } = this;
