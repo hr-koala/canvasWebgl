@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script src="js/ball.js"></script>
+
+        <!--<script>
+
+            //距离越小，速度不断减小
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+
+            var vx = 1
+            var vy = 1
+            var g = 2  //加速度
+            var f = .5 //阻力-摩擦系数
+
+            var ball = new Ball({
+                x:20,
+                y:20,
+                r:Math.random()*10+10,
+                // vx: -(Math.random()*10+10),
+                // vy: -(Math.random()*20+10),
+                // g: Math.random()*3+1,
+                fillStyle:`rgba(${(Math.random()*255|0)},${(Math.random()*255|0)},${(Math.random()*255|0)})`,
+            }).render(context)
+
+            var target = {
+                x: width/4*3,
+                y: height/4*3
+            }
+            function arc(){
+                context.beginPath()
+                context.arc(target.x,target.y,10,0,Math.PI*2,false) //圆心x轴坐标，y轴，半径，起始角度，终点角度，是否逆时针绘制
+                context.fillStyle = "#ff0"
+                context.fill()
+            }
+            arc()
+
+            context.beginPath()
+            var easeing = 0.05
+
+            function move(){
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                arc()
+                ball.vx = (target.x - ball.x)*easeing
+                ball.vy = (target.y - ball.y)*easeing
+                ball.x += ball.vx
+                ball.y += ball.vy
+
+                ball && ball.render(context)
+
+            }
+            move()
+        </script>-->
+
+        <script>
+
+            //距离越小，速度不断减小
+            // 弹跳运动也有一个弹跳系数，例如设置为:var easeing = 0.15;
+            // 水平方向的加速度:var ax = (target.x - ball.x ) * easeing;
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+
+            var vx = 1
+            var vy = 1
+            var g = 2  //加速度
+            var f = .5 //阻力-摩擦系数
+            var k = .8
+
+            var ball = new Ball({
+                x:20,
+                y:height/2,
+                r:Math.random()*10+10,
+                // vx: -(Math.random()*10+10),
+                // vy: -(Math.random()*20+10),
+                // g: Math.random()*3+1,
+                fillStyle:`rgba(${(Math.random()*255|0)},${(Math.random()*255|0)},${(Math.random()*255|0)})`,
+            }).render(context)
+
+            var target = {
+                x: width/4*3,
+                 y: height/4*3
+            }
+            function arc(){
+                context.beginPath()
+                context.arc(target.x,target.y,10,0,Math.PI*2,false) //圆心x轴坐标，y轴，半径，起始角度，终点角度，是否逆时针绘制
+                context.fillStyle = "#ff0"
+                context.fill()
+            }
+            arc()
+
+            context.beginPath()
+            var easeing = 0.5
+
+            function move(){
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                var ax = (target.x - ball.x)*easeing  //加速度
+                ball.vx += ax
+                ball.vx *= k
+                // if(ball.x + ball.r>=target.x){
+                //     ball.x = target.x-ball.r
+                //     ball.vx *= -k
+                // }
+                // ball.vy = (target.y - ball.y)*easeing
+                ball.x += ball.vx
+                // ball.y += ball.vy
+
+                ball && ball.render(context)
+
+            }
+            move()
+        </script>
+
+
+</body>
+</html>

@@ -11,6 +11,8 @@ class Ball{
         this.strokeStyle = 'rgba(0,0,0,0)';  //小球的描边颜色
         this.fillStyle = '#abcdef'; //小球填充色
         this.opacity = 1; //小球透明度
+        this.vx = 1; //小球x轴速度
+        this.vy = 1; //小球y轴速度
         Object.assign(this,options); //将实例化的参数覆盖默认参数
         return this;  //返回当前对象，以实现链式调用
 

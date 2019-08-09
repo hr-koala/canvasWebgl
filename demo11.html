@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script src="js/ball.js"></script>
+        <!--<script>
+
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+
+            var vx = 1
+            // var vy = 1
+            var g = 2  //加速度
+            var f = .8 //阻力-摩擦系数
+            var ball = new Ball({
+                x:50,
+                y:20,
+                r:10,
+                vy: Math.random()*3+10,
+                fillStyle:'#f90',
+            }).render(context)
+
+            function move(){
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                ball.x += vx
+                ball.y += ball.vy
+                ball.vy += g
+                if(ball.y + ball.r >=height){ //小球碰到地面上时的临界条件
+                    ball.y = height - ball.r
+                    // 将速度取反由于摩擦力存在将速度减小
+                    ball.vy *=-f
+                    if(Math.abs(ball.vy) < 2 && height -( ball.y + ball.r ) < 8 ){
+                        ball.y = height - ball.r;
+                        ball.vy = 0;
+                    }
+                }
+                if(ball.x>width/2){ball.x = 20}
+
+                ball.render(context)
+            }
+            move()
+        </script>-->
+
+        <script>
+
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+
+            var vx = 1
+            // var vy = 1
+            var g = 2  //加速度
+            var f = .5 //阻力-摩擦系数
+
+            var balls = []
+            /*
+            var ball = new Ball({
+                x:width-50,
+                y:height/2,
+                r:Math.random()*10+10,
+                vx: -(Math.random()*10+10),
+                vy: -(Math.random()*20+10),
+                g: Math.random()*3+1,
+                fillStyle:`rgba($(Math.random()*255|0),$(Math.random()*255|0),$(Math.random()*255|0))`,
+            }).render(context)
+            */
+
+            var t = setInterval(()=>{
+                var ball = new Ball({
+                    x:width-50,
+                    y:height/2,
+                    r:Math.random()*10+10,   //半径10-20
+                    vx: -(Math.random()*10+5),  //x轴水平速度5-15
+                    vy: -(Math.random()*20+10),  //y轴垂直方向速度10-30
+                    g: Math.random()*3+1,  //加速度参数
+                    fillStyle: `rgba(${(Math.random()*255|0)},${(Math.random()*255|0)},${(Math.random()*255|0)},1)`,
+                });
+                balls.push(ball)
+            },100)
+
+            function move(){
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                balls.forEach((ball,i)=>{
+                    ball.x += ball.vx
+                    ball.y += ball.vy
+                    ball.vy += ball.g
+
+                if(ball.y + ball.r >=height){ //小球碰到地面上时的临界条件
+                    ball.y = height - ball.r
+                    // 将速度取反由于摩擦力存在将速度减小
+                    ball.vy *=-f
+
+                }
+                    //小球移出了屏幕最左侧 ，清除小球
+                if(ball.x + ball.r <0){
+                    ball = null
+                    balls.splice(i,1)
+                }
+
+                ball && ball.render(context)
+            })
+                document.title = 'ball长度：'+ balls.length
+            }
+            // document.title = 'ball长度：'+ balls.length
+            move()
+        </script>
+
+
+
+</body>
+</html>
