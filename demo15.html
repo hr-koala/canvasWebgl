@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script src="js/ball.js"></script>
+
+        <script>
+
+/*
+给Canvas画布添加mousedown mousemove mouseout事件。
+在鼠标按下的时候，我们先要判断是否点中了小球，如果没有点中，后续的操作终止
+在mousedown事件中获取鼠标相对于画布的起始坐标并且计算出鼠标和小球中心点的坐标差值。
+在mousemove中我们获取到鼠标的相对画布的坐标，然后再减去我们在mousedown中小球和鼠标的坐标差值，将得到的结果赋值给小球的x,y属性，
+在mouseup事件中去清除mousemove 和mouseup事件。
+*/
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+
+
+            var ball = new Ball({
+                x:width/2,
+                y:height/2,
+                r:Math.random()*10+90,
+                // vx: -(Math.random()*10+10),
+                // vy: -(Math.random()*20+10),
+                // g: Math.random()*3+1,
+                fillStyle:`rgba(${(Math.random()*255|0)},${(Math.random()*255|0)},${(Math.random()*255|0)})`,
+            }).render(context)
+
+            context.beginPath()
+
+            //鼠标起始位置。
+            var mouse = {x:0,y:0};
+
+            canvas.onmousedown = function(e){
+                var mouseX = e.pageX - canvas.offsetLeft
+                var mouseY = e.pageY - canvas.offsetTop
+                ball.render(context,mouseX,mouseY)
+                if (!ball.isPointInPath){
+                    return
+                }
+                var startX = mouseX - ball.x
+                var startY = mouseY - ball.y
+                canvas.onmousemove = function (e) {
+                    context.clearRect(0,0,width,height);
+                    var disX = e.pageX - canvas.offsetLeft - startX
+                    var disY = e.pageY - canvas.offsetTop - startY
+                    ball.x = disX
+                    ball.y = disY
+                    ball.render(context)
+                    canvas.style.cursor = 'pointer'
+                }
+                canvas.onmouseup = function () {
+                    canvas.onmousemove = null
+                    canvas.onmouseup = null
+                }
+            }
+
+            //监听画布的鼠标移动事件，并计算出鼠标相对于画布的坐标。
+            canvas.onmousemove = function(e){
+                // console.log(e)
+                mouse.x = e.pageX - canvas.offsetLeft;
+                mouse.y = e.pageY - canvas.offsetTop;
+            }
+
+
+            function move(){
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                //两个方向的加速度的计算方法
+                var ax = (mouse.x - ball.x ) * easeing;
+                var ay = (mouse.y - ball.y ) * easeing;
+                //将加速度附加到小球的速度上
+                ball.vx += ax ;
+                ball.vy +=ay;
+                //给小球加上摩擦力的影响。
+                ball.vx *= k;
+                ball.vy *= k;
+
+                //将小球的最终速度作用在小球的xy属性上。
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                //由于小球和鼠标有重力的影响，所以我们给y轴的速度一个重力的作用。
+                ball.vy += g;
+                ball && ball.render(context)
+
+                context.beginPath()
+                // context.moveTo(ball.x,ball.y)
+                // context.lineTo(mouse.x,mouse.y)
+                context.moveTo(mouse.x,mouse.y)
+                context.lineTo(ball.x,ball.y)
+                context.stroke()
+
+            }
+            // move()
+
+            canvas.addEventListener('click',(e)=>{
+                var x = e.pageX - canvas.offsetLeft
+                var y = e.pageY - canvas.offsetTop
+                context.clearRect(0,0,width,height);
+                ball.render(context,x,y);
+                if(ball.isPointInPath){
+                    console.log("小球被点击了-坐标"+ x+','+ y)
+                }
+            })
+
+
+        </script>
+
+
+
+</body>
+</html>

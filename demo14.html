@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+        <canvas id="myCanvas" width="600" height="600"></canvas>
+        <script src="js/ball.js"></script>
+
+        <script>
+
+            //距离越小，速度不断减小
+            var canvas = document.querySelector('#myCanvas')
+            var context = canvas.getContext('2d')
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            var {width,height} = canvas
+
+            var vx = 1
+            var vy = 1
+            var g = 2  //加速度
+            var f = .5 //阻力-摩擦系数
+
+            var ball = new Ball({
+                x:width/2,
+                y:height/2,
+                r:Math.random()*10+90,
+                // vx: -(Math.random()*10+10),
+                // vy: -(Math.random()*20+10),
+                // g: Math.random()*3+1,
+                fillStyle:`rgba(${(Math.random()*255|0)},${(Math.random()*255|0)},${(Math.random()*255|0)})`,
+            }).render(context)
+
+            context.beginPath()
+            var easeing = 0.05
+
+            //鼠标起始位置。
+            var mouse = {x:0,y:0};
+
+            /*
+            canvas.addEventListener('click',(e)=>{
+                //判断两个点之间的距离和半径相比
+                var x = e.pageX -canvas.offsetLeft
+                var y = e.pageY -canvas.offsetTop
+                var a = x - ball.x
+                var b = y - ball.y
+                var c = Math.sqrt(Math.pow(a,2)+Math.pow(b,2))
+                if(c<=ball.x){
+                    console.log("11111dainjile")
+                }
+            })
+            */
+
+            //监听画布的鼠标移动事件，并计算出鼠标相对于画布的坐标。
+            canvas.onmousemove = function(e){
+                // console.log(e)
+                mouse.x = e.pageX - canvas.offsetLeft;
+                mouse.y = e.pageY - canvas.offsetTop;
+            }
+            //定义弹动系数，摩擦系数，重力常量
+            var easeing = 0.15,k = .9,g = 15;
+
+            function move(){
+                context.clearRect(0,0,width,height)
+                window.requestAnimationFrame(move);
+                //两个方向的加速度的计算方法
+                var ax = (mouse.x - ball.x ) * easeing;
+                var ay = (mouse.y - ball.y ) * easeing;
+                //将加速度附加到小球的速度上
+                ball.vx += ax ;
+                ball.vy +=ay;
+                //给小球加上摩擦力的影响。
+                ball.vx *= k;
+                ball.vy *= k;
+
+                //将小球的最终速度作用在小球的xy属性上。
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                //由于小球和鼠标有重力的影响，所以我们给y轴的速度一个重力的作用。
+                ball.vy += g;
+                ball && ball.render(context)
+
+                context.beginPath()
+                // context.moveTo(ball.x,ball.y)
+                // context.lineTo(mouse.x,mouse.y)
+                context.moveTo(mouse.x,mouse.y)
+                context.lineTo(ball.x,ball.y)
+                context.stroke()
+
+            }
+            // move()
+
+            canvas.addEventListener('click',(e)=>{
+                var x = e.pageX - canvas.offsetLeft
+                var y = e.pageY - canvas.offsetTop
+                context.clearRect(0,0,width,height);
+                ball.render(context,x,y);
+                if(ball.isPointInPath){
+                    console.log("小球被点击了-坐标"+ x+','+ y)
+                }
+            })
+
+
+        </script>
+
+
+
+</body>
+</html>
