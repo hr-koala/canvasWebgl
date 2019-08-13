@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+<canvas id="myCanvas" width="600" height="600"></canvas>
+<script src="js/comment.js"></script>
+
+<script>
+
+    /*
+    if(rect.x + rect.w < rect1.x || rect.x> rect1.w+ rect1.x || rect.y + rect.h < rect1.y || rect.y > rect1.h+ rect1.y){
+        console.log('没有碰撞上...')
+    }else{
+        console.log('碰撞上了 ^_^ ...')
+    }
+    */
+    var canvas = document.querySelector('#myCanvas')
+    var context = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    var {width, height} = canvas
+
+    var react1 = new React({
+        x: 200,
+        y: 200,
+        fillStyle: `rgba(${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)})`,
+    }).render(context)
+    var react2 = new React({
+        x: 100,
+        y: 100,
+        fillStyle: `rgba(${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)})`,
+    }).render(context)
+
+    //鼠标起始位置。
+    var mouse = {x: 0, y: 0};
+
+    canvas.onmousedown = function (e) {
+        var mouseX = e.pageX - canvas.offsetLeft
+        var mouseY = e.pageY - canvas.offsetTop
+        react1.render(context, mouseX, mouseY)
+        if (!react1.isPointInPath) {
+            return
+        }
+        var startX = mouseX - react1.x
+        var startY = mouseY - react1.y
+        var lastX = 0, lastY = 0; //上一次小球的X坐标,上一次小球的Y坐标
+        canvas.onmousemove = function (e) {
+            isMoving = true;
+            context.clearRect(0, 0, width, height);
+            var disX = e.pageX - canvas.offsetLeft - startX
+            var disY = e.pageY - canvas.offsetTop -  startY
+            console.log(disX, disY)
+            react1.x = disX
+            react1.y = disY
+            if(react1.x + react1.w < react2.x || react1.x >react2.x+react2.w || react1.y+react1.h <react2.y || react1.y> react2.y + react2.h){
+                console.log('没有')
+            }else {
+                console.log('撞')
+            }
+            react1.render(context)
+            react2.render(context)
+            canvas.style.cursor = 'pointer'
+        }
+        canvas.onmouseup = function () {
+            canvas.onmousemove = null
+            canvas.onmouseup = null
+            canvas.style.cursor = 'default'
+
+        }
+    }
+
+    // move()
+    function move() {
+        window.requestAnimationFrame(move)
+        context.clearRect(0, 0, width, height)
+        // console.log(isMoving)
+        if (!isMoving) {
+            //小球顶部的判断
+            if (ball.y - ball.r <= 0) {
+                ball.vy *= k;
+                ball.y = ball.r;
+            }
+            //小球的底部判断
+            if (ball.y + ball.r >= height) {
+                ball.vy *= k;
+                ball.y = height - ball.r;
+            }
+            //小球左侧的判断
+            if (ball.x - ball.r <= 0) {
+                ball.x = ball.r
+                ball.vx *= k;
+            }
+            //小球右侧的判断
+            if (ball.x + ball.r >= width) {
+                ball.x = width - ball.r;
+                ball.vx *= k;
+            }
+            //小球最终在y轴下停下来的条件
+            //1.离屏幕底部足够小。
+            //2.小球的速度足够小
+            console.log(ball.y, ball.vy, ball.vx)
+            if ((height - (ball.y + ball.r)) < 7 && Math.abs(ball.vy) < 1.5) {
+                ball.y = height - ball.r;
+                ball.vx = 0;
+            }
+
+            ball.vy += ball.g;
+
+            ball.x += ball.vx;
+            ball.y += ball.vy;
+        }
+        ball.render(context);
+    }
+
+</script>
+
+<script>
+
+    /*
+    //x1,y1 和 x2,y2 分别代表两个点的坐标
+    function dis(x1,y1,x2,y2){
+        return Math.sqrt(Math.pow(x1 - x2,2) + Math.pow(y1-y2,2))
+    }
+    */
+    var canvas = document.querySelector('#myCanvas')
+    var context = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    var {width, height} = canvas
+
+    var ball1 = new Ball({
+        x: Math.random() * width / 2,
+        y: Math.random() * height / 2,
+        r: Math.random() * 10 + 20,
+        vx: -(Math.random() * 10 + 10),
+        vy: -(Math.random() * 20 + 10),
+        g: Math.random() * 3 + 1,
+        fillStyle: `rgba(${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)})`,
+    }).render(context)
+
+    var ball2 = new Ball({
+        x: Math.random() * width / 2,
+        y: Math.random() * height / 2,
+        r: Math.random() * 10 + 30,
+        vx: -(Math.random() * 10 + 10),
+        vy: -(Math.random() * 20 + 10),
+        g: Math.random() * 3 + 1,
+        fillStyle: `rgba(${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)},${(Math.random() * 255 | 0)})`,
+    }).render(context)
+
+    context.beginPath()
+
+    //鼠标起始位置。
+    var mouse = {x: 0, y: 0};
+
+    canvas.onmousedown = function (e) {
+        var mouseX = e.pageX - canvas.offsetLeft
+        var mouseY = e.pageY - canvas.offsetTop
+        ball1.render(context, mouseX, mouseY)
+        if (!ball1.isPointInPath) {
+            return
+        }
+        var startX = mouseX - ball1.x
+        var startY = mouseY - ball1.y
+        var lastX = 0, lastY = 0; //上一次小球的X坐标,上一次小球的Y坐标
+        canvas.onmousemove = function (e) {
+            context.clearRect(0, 0, width, height);
+            var disX = e.pageX - canvas.offsetLeft -  startX
+            var disY = e.pageY - canvas.offsetTop -  startY
+            console.log(disX, disY)
+            ball1.x = disX
+            ball1.y = disY
+            function dis(x1,y1,x2,y2) {
+                return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2))
+            }
+            if(dis(ball1.x,ball1.y,ball2.x,ball2.y)<ball1.r+ball2.r){
+                console.log('撞ball')
+            }else {
+                console.log('没撞ball')
+            }
+            ball1.render(context)
+            ball2.render(context)
+            canvas.style.cursor = 'pointer'
+        }
+        canvas.onmouseup = function () {
+            canvas.onmousemove = null
+            canvas.onmouseup = null
+            canvas.style.cursor = 'default'
+
+        }
+    }
+    /*canvas.onmousedown = function (e) {
+        var mouseX = e.pageX - canvas.offsetLeft
+        var mouseY = e.pageY - canvas.offsetTop
+        ball2.render(context, mouseX, mouseY)
+        if (!ball2.isPointInPath) {
+            return
+        }
+        var startX = mouseX - ball2.x
+        var startY = mouseY - ball2.y
+        var lastX = 0, lastY = 0; //上一次小球的X坐标,上一次小球的Y坐标
+        canvas.onmousemove = function (e) {
+            isMoving = true;
+            context.clearRect(0, 0, width, height);
+            var disX = e.pageX - startX
+            var disY = e.pageY - startY
+            console.log(disX, disY)
+            ball2.x = disX
+            ball2.y = disY
+            function dis(x1,y1,x2,y2) {
+                return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2))
+            }
+            if(dis(ball1.x,ball1.y,ball2.x,ball2.y)<ball1.r+ball2.r){
+                console.log('撞ball')
+            }else {
+                console.log('没撞ball')
+            }
+            ball1.render(context)
+            ball2.render(context)
+            canvas.style.cursor = 'pointer'
+        }
+        canvas.onmouseup = function () {
+            canvas.onmousemove = null
+            canvas.onmouseup = null
+            canvas.style.cursor = 'default'
+
+        }
+    }*/
+
+
+</script>-->
+
+
+</body>
+</html>
