@@ -10,9 +10,15 @@
     <canvas id="myCanvas" width="500" height="500"></canvas>
     <script>
         // 线性画圆(lineTo)
-        let myCanvas = document.getElementById('myCanvas');
-        let cxt = myCanvas.getContext('2d')
-        cxt.translate(myCanvas.width/2,myCanvas.height/2)
+        let canvas = document.getElementById('myCanvas');  //获取Canvas元素
+        let cxt = canvas.getContext('2d')                  //返回canvas 的上下文，如果上下文没有定义则返回 null .
+
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+        var {width, height} = canvas
+
+        // cxt.translate(canvas.width/2,canvas.height/2)
+        cxt.translate(width/2,height/2)  //平移到画布中心
         cxt.beginPath()
         cxt.lineWidth = 5;
         var angle = 0
@@ -26,7 +32,7 @@
             grd.addColorStop('0',"red");
             grd.addColorStop('0.5',"yellow");
             grd.addColorStop('1',"blue");
-            cxt.strokeStyle = grd
+            cxt.strokeStyle = grd          //设置线条样式
             cxt.lineTo(x,y)
             cxt.stroke()
             angle++
@@ -39,7 +45,7 @@
         // cxt.arc(50,50,50,Math.PI,false)
         // cxt.closePath()
         // cxt.stroke()
-    
+
     </script>
 </body>
 </html>

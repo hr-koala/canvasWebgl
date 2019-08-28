@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+<canvas id="myCanvas" width="600" height="600"></canvas>
+<script src="js/comment.js"></script>
+
+<!--<script>
+
+    /*
+高级坐标旋转的公式及推导
+公式：
+x1 = x * cos(vr) - y * sin(vr)
+y1 = y * sin(vr) + x * sin(vr)
+参数说明
+x1、y1是旋转后的坐标
+x 、y是小球的相对于中心点的坐标，比如中心点的坐标是centerX,centerY,那么x = ball.x -
+centerX , y = ball.y - centerY
+vr是每一帧要旋转的角速度。
+推导过程：
+设中心点坐标为 (0，0)
+那么物体当前的坐标：x = r * cos(angle); y = r * sin(angle);
+物体下一帧旋转角度为vr 所以：
+物体的下一帧坐标：x1 = r * cos(angle + vr ); y1 = r * sin( angle + vr);
+接下来我们可以根据三角函数公式有：
+cos(a+b) = cos(a) * cos(b) - sin(a) * sin(b)
+sin(a+b) = sin(a) * cos(b) ＋cos(a) * sin(b)
+我们再将x1 和 y1代入进行展开。
+x1 = r * cos(angle) * cos(vr) - r * sin(angle) * sin(vr);
+y1= r * sin(angle) * cos(vr) + r * cos(angle) * sin(vr);
+因为x = r * cos(angle) y = r*sin(angle);所以我们可以用x y 去替换 x1 和 y1的公式，
+x1 = x * cos(vr) - y * sin(vr);
+y1 = y * cos(vr) + x * sin(vr);
+    */
+    /*
+逆时针公式，其实和顺时针差不多
+x1 = x * cos(vr) + y * sin(vr)
+y1 = y * sin(vr) - x * sin(vr)
+    */
+
+
+    var canvas = document.querySelector('#myCanvas')
+    var context = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    var {width, height} = canvas
+
+
+    //鼠标起始位置。
+    var mouse = {x: 0, y: 0};
+
+    var ball = new Ball({
+        x:Math.random()*width,
+        y:Math.random()*height,
+        r:Math.random()*10+10,
+        vx:(Math.random()*3+1)*(Math.random()>.5?1:-1),
+        vy:(Math.random()*3+1)*(Math.random()>.5?1:-1),
+        fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
+    }).render(context)
+
+    var centerX = width >> 1, centerY = height >> 1
+    var vr = 0.03, cos = Math.cos(vr), sin = Math.sin(vr)
+    var point = new Ball({
+        x : centerX,
+        y : centerY,
+        r : Math.random()*10+10,
+        fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
+
+    })
+
+    move()
+    function move() {
+        window.requestAnimationFrame(move)
+        context.clearRect(0, 0, width, height)
+        const rx = ball.x - centerX  //相对坐标
+        const ry = ball.y - centerY
+        var x = rx * cos - ry * sin
+        var y = ry * cos + rx * sin
+        ball.x = centerX + x
+        ball.y = centerY + y
+        ball.render(context)
+        point.render(context)
+
+    }
+
+</script>-->
+
+<script>
+
+    var canvas = document.querySelector('#myCanvas')
+    var context = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    var {width, height} = canvas
+
+    //鼠标起始位置。
+    var mouse = {x: 0, y: 0};
+    var balls = []
+
+    //设置3维世界中的坐标
+    let x =0,y = 0,z = 0;
+    var hideX = width >> 1,
+        hideY = height >> 1;
+
+    var {range} = util;
+    var f1 = 200;
+
+    var num = 200,g = .2,bounce = -.8,
+        floor = 300,//地平面
+        f1 = 250,hideX = width >>1,hideY = height>> 1;
+
+    for (var i=0;i<num;i++){
+        var ball = new Ball({
+            y3d:-200,
+            vz:range(-5,5),
+            r:Math.random()*10+10,
+            vx:range(-6,6),
+            vy:range(-6,6),
+            fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
+        }).render(context)
+        balls.push(ball)
+    }
+
+
+    move()
+    function move() {
+        window.requestAnimationFrame(move)
+        context.clearRect(0, 0, width, height)
+        context.fillRect(0,0,width,height);
+
+        balls.sort((a,b)=>{    //
+            return b.z3d - a.z3d;
+        })
+        balls.forEach(ball=>{
+
+            ball.vy += g;//重力
+            ball.x3d += ball.vx;
+            ball.y3d += ball.vy;
+            ball.z3d += ball.vz;
+
+            //小球到达地面上，开始反弹。
+            if(ball.y3d > floor){
+                ball.y3d = floor;
+                ball.vy *= bounce;
+            }
+            if(ball.z3d > -f1){//保证小球在可视区内被绘制出来
+                var scale = f1 / (f1 + ball.z3d);
+                ball.scaleX = ball.scaleY = scale;
+                ball.x = hideX + ball.x3d * scale;
+                ball.y = hideY + ball.y3d * scale;
+                ball.render(context)
+            }
+
+        })
+
+    }
+
+</script>
+
+
+</body>
+</html>
