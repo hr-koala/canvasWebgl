@@ -81,27 +81,29 @@ y1 = y * sin(vr) - x * sin(vr)
             y:100,
             r:Math.random()*10+50,
             // vx:range(-6,6),
-            vy:range(-60,60),
+            vy:range(-6,6),
             fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
         }).render(context)
         balls.push(ball)
     }
 
-    var line = new Line({
-        x:100,
+
+    var ball = new Ball({
+        x:500,
         y:300,
-        x1:0,
-        y1:0,
-        x2:800,
-        y2:0,
-        lineWidth:3,
-        rotation: Math.PI/180 * 10,
-        strokeStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
+        r:70,
+        fillStyle:"#f90"
+    });
 
-    })
-    var sin = Math.sin(line.rotation),
-        cos = Math.cos(line.rotation)
-
+    var mouse = {x:0,y:0}
+    window.addEventListener('keydown',e=>{
+        if(e.keyCode === 38)z+=5;
+        if(e.keyCode === 40)z -=5;
+    });
+    canvas.onmousemove = e =>{
+        mouse.x = e.pageX - canvas.offsetLeft;
+        mouse.y = e.pageY - canvas.offsetTop;
+    }
 
     move()
     function move() {
@@ -109,56 +111,16 @@ y1 = y * sin(vr) - x * sin(vr)
         context.clearRect(0, 0, width, height)
         context.fillRect(0,0,width,height);
 
-        balls.forEach(ball=>{
+        if(f1+z>0){//因为f1+z作了除数，这里记得要作下判断
+            var scale = f1 / (f1 + z);
 
-            ball.vy += g;//重力
-            ball.y += ball.vy;
-            ball.x += ball.vx;
-            var rx = ball.x - line.x;
-            var ry = ball.y - line.y;
-            var x1 = rx * cos + ry * sin;
-            var y1 = ry * cos - rx * sin;
-            var vx1 = ball.vx * cos + ball.vy * sin;
-            var vy1 = ball.vy * cos - ball.vx * sin;
-
-            if(x1 + ball.r > line.x1 && x1 - ball.r < line.x2){
-
-                if(y1 + ball.r >0 && vy1 > y1){
-                    y1 = -ball.r;
-                    vy1 *= bounce;
-                }
-                if(y1 - ball.r < 0 && vy1 < y1){
-                    y1 = ball.r;
-                    vy1 *= bounce;
-                }
-            }
-            rx = x1 * cos - y1 * sin;
-            ry = y1 * cos + x1 * sin;
-            ball.vx = vx1 * cos - vy1 * sin;
-            ball.vy = vy1 * cos + vx1 * sin;
-
-            ball.x = line.x + rx;
-            ball.y = line.y + ry;
-            if(ball.x - ball.r <= 0){
-                ball.x = ball.r;
-                ball.vx *= bounce;
-            }
-            if(ball.x + ball.r > width ){
-                ball.x = width - ball.r;
-                ball.vx *= bounce;
-            }
-            if(ball.y - ball.r <=0){
-                ball.y = ball.r;
-                ball.vy *= bounce;
-            }
-            if(ball.r + ball.y > height){
-                ball.y = height - ball.r;
-                ball.vy *= bounce;
-            }
-
+            ball.scaleX = ball.scaleY = scale;
+            x = mouse.x - hideX;
+            y = mouse.y - hideY;
+            ball.x = hideX + x * scale;
+            ball.y = hideY + y * scale;
             ball.render(context);
-            line.render(context);
-        })
+        }
     }
 </script>
 

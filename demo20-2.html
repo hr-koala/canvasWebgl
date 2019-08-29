@@ -81,7 +81,7 @@ y1 = y * sin(vr) - x * sin(vr)
             y:100,
             r:Math.random()*10+50,
             // vx:range(-6,6),
-            vy:range(-60,60),
+            vy:range(-6,6),
             fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
         }).render(context)
         balls.push(ball)
@@ -92,7 +92,7 @@ y1 = y * sin(vr) - x * sin(vr)
         y:300,
         x1:0,
         y1:0,
-        x2:800,
+        x2:600,
         y2:0,
         lineWidth:3,
         rotation: Math.PI/180 * 10,
@@ -112,52 +112,22 @@ y1 = y * sin(vr) - x * sin(vr)
         balls.forEach(ball=>{
 
             ball.vy += g;//重力
-            ball.y += ball.vy;
-            ball.x += ball.vx;
-            var rx = ball.x - line.x;
-            var ry = ball.y - line.y;
-            var x1 = rx * cos + ry * sin;
-            var y1 = ry * cos - rx * sin;
-            var vx1 = ball.vx * cos + ball.vy * sin;
-            var vy1 = ball.vy * cos - ball.vx * sin;
+            ball.x3d += ball.vx;
+            ball.y3d += ball.vy;
+            ball.z3d += ball.vz;
 
-            if(x1 + ball.r > line.x1 && x1 - ball.r < line.x2){
-
-                if(y1 + ball.r >0 && vy1 > y1){
-                    y1 = -ball.r;
-                    vy1 *= bounce;
-                }
-                if(y1 - ball.r < 0 && vy1 < y1){
-                    y1 = ball.r;
-                    vy1 *= bounce;
-                }
-            }
-            rx = x1 * cos - y1 * sin;
-            ry = y1 * cos + x1 * sin;
-            ball.vx = vx1 * cos - vy1 * sin;
-            ball.vy = vy1 * cos + vx1 * sin;
-
-            ball.x = line.x + rx;
-            ball.y = line.y + ry;
-            if(ball.x - ball.r <= 0){
-                ball.x = ball.r;
-                ball.vx *= bounce;
-            }
-            if(ball.x + ball.r > width ){
-                ball.x = width - ball.r;
-                ball.vx *= bounce;
-            }
-            if(ball.y - ball.r <=0){
-                ball.y = ball.r;
+            //小球到达地面上，开始反弹。
+            if(ball.y3d > floor){
+                ball.y3d = floor;
                 ball.vy *= bounce;
             }
-            if(ball.r + ball.y > height){
-                ball.y = height - ball.r;
-                ball.vy *= bounce;
+            if(ball.z3d > -f1){//保证小球在可视区内被绘制出来
+                var scale = f1 / (f1 + ball.z3d);
+                ball.scaleX = ball.scaleY = scale;
+                ball.x = hideX + ball.x3d * scale;
+                ball.y = hideY + ball.y3d * scale;
+                ball.render(context)
             }
-
-            ball.render(context);
-            line.render(context);
         })
     }
 </script>
