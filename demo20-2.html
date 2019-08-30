@@ -69,19 +69,26 @@ y1 = y * sin(vr) - x * sin(vr)
         hideY = height >> 1;
 
     var {range} = util;
-    var f1 = 200;
+    var f1 = 200;  //景深
 
     var num = 200,g = .2,bounce = -.8,
         floor = 300,//地平面
         f1 = 250,hideX = width >>1,hideY = height>> 1;
 
+    // 小球在3维空间的中xyz坐标
+    this.x3d = 0;
+    this.y3d = 0;
+    this.z3d = 0;
+    //小球z轴的速度
+    this.vz = 0;
+
     for (var i=0;i<num;i++){
         var ball = new Ball({
-            x:200,
-            y:100,
-            r:Math.random()*10+50,
-            // vx:range(-6,6),
+            y3d:-200,
+            r:Math.random()*10+10,
+            vx:range(-6,6),
             vy:range(-6,6),
+            vz:range(-6,6),
             fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
         }).render(context)
         balls.push(ball)
@@ -108,6 +115,9 @@ y1 = y * sin(vr) - x * sin(vr)
         window.requestAnimationFrame(move)
         context.clearRect(0, 0, width, height)
         context.fillRect(0,0,width,height);
+        balls.sort((a,b)=>{
+            return b.z3d - a.z3d
+        })
 
         balls.forEach(ball=>{
 

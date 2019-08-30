@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+</head>
+<body>
+<canvas id="myCanvas" width="600" height="600"></canvas>
+<script src="js/comment.js"></script>
+
+<script>
+
+    /*
+    设置基础变量
+    循环创建粒子并每一个粒子随机的位置属性
+    在循环函数中不停的去改变Z轴的大小，计算出scale ,然后再作用在粒子的xy属性上
+    粒子的临界点条件的判断
+    排序 、渲染
+    * */
+
+
+    var canvas = document.querySelector('#myCanvas')
+    var context = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    var {width, height} = canvas
+
+    //鼠标起始位置。
+    var mouse = {x: 0, y: 0};
+    var balls = []
+
+    //设置3维世界中的坐标
+    // 小球在3维空间的中xyz坐标
+    this.x3d = 0;
+    this.y3d = 0;
+    this.z3d = 0;
+    //小球z轴的速度
+    this.vz = 0;
+
+    let x =0,y = 0,z = 0;
+    var hideX = width >> 1,
+        hideY = height >> 1;
+
+    var {range} = util;
+    var f1 = 400;  //景深
+
+    var num = 800,  //粒子个数
+        g = .2,
+        bounce = -.8,
+        floor = 300,//地平面
+        f1 = 250,  //景深
+        hideX = width >>1,  //消失点X
+        hideY = height>> 1,  //消失点Y
+        maxZ3d = 2200;    //粒子Z轴最大值
+
+    for (var i=0;i<num;i++){
+        var ball = new Ball({
+            x3d: range(-1.5*width,1.5*width),
+            y3d: range(-1.5*height, 1.5*height),
+            z3d: range(0,maxZ3d),
+            r:Math.random()*10+20,
+            // vx:range(-6,6),
+            // vy:range(-6,6),
+            vz:range(-6,6),
+            az: range(-3,3),
+            fillStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
+        }).render(context)
+        balls.push(ball)
+    }
+
+    var line = new Line({
+        x:100,
+        y:300,
+        x1:0,
+        y1:0,
+        x2:600,
+        y2:0,
+        lineWidth:3,
+        rotation: Math.PI/180 * 10,
+        strokeStyle: 'rgba('+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+','+(Math.random()*255|0)+')'
+
+    })
+    var sin = Math.sin(line.rotation),
+        cos = Math.cos(line.rotation)
+
+
+    move()
+    function move() {
+        window.requestAnimationFrame(move)
+        context.clearRect(0, 0, width, height)
+        context.fillRect(0,0,width,height);
+        balls.sort((a,b)=>{
+            return b.z3d - a.z3d
+        })
+
+        balls.forEach(ball=>{
+
+            // ball.vy += g;//重力
+            // ball.x3d += ball.vx;
+            // ball.y3d += ball.vy;
+            // ball.z3d += ball.vz;
+
+            ball.vz += ball.az
+            ball.vz *= bounce
+            ball.z3d += ball.vz
+
+            //小球到达地面上，开始反弹。
+            // if(ball.y3d > floor){
+            //     ball.y3d = floor;
+            //     ball.vy *= bounce;
+            // }
+            if(ball.z3d + f1 <0){
+                ball.z3d += maxZ3d
+            }
+            var scale = f1 / (f1 + ball.z3d);
+            ball.scaleX = ball.scaleY = scale;
+            ball.x = hideX + ball.x3d * scale;
+            ball.y = hideY + ball.y3d * scale;
+
+        })
+        balls.forEach(ball =>{
+            ball.render(context)
+        })
+    }
+</script>
+
+
+</body>
+</html>
+
